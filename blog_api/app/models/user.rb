@@ -10,4 +10,5 @@ class User < ApplicationRecord
   validates :sex, :presence => {:message => "Vui lòng chọn giới tính!!!" }
   validates :birthday, :presence => {:message => "Vui lòng chọn ngày sinh!!!" }
   validates :email, :uniqueness => { :message => 'Email này đã đưọc sử dụng!!!'}
+
 end
