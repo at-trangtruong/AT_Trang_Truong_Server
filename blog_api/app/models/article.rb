@@ -4,6 +4,7 @@ class Article < ApplicationRecord
   has_many :comments
   belongs_to :category
   belongs_to :user
+  has_many :tags, through: :articles_tags
 
   validates :name, :presence => {:message => "Vui lòng nhập tên bài viết!!!" }
   validates :description, :presence => {:message => "Vui lòng nhập mô tả bài viết!!!" }
