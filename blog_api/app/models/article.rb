@@ -1,4 +1,5 @@
 class Article < ApplicationRecord
+  acts_as_paranoid
   has_many :articles_tags
   has_many :favorites
   has_many :comments
