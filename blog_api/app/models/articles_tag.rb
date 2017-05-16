@@ -1,4 +1,4 @@
-class ArticlesTag < ApplicationRecord
+class ArticlesTagSnippets < ApplicationRecord
   belongs_to :article
   belongs_to :tag
 
