@@ -1,3 +1,7 @@
 class User::UserArticlesSerializer < ActiveModel::Serializer
-  attributes :id, :first_name, :last_name, :avatar
+  attributes :id, :fullname, :avatar
+
+  def fullname
+    object.first_name + " " + object.last_name
+  end
 end

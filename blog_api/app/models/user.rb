@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+
+  mount_uploader :avatar, AvatarUploader
+
   has_many :comments
   has_many :articles
   has_many :favorites
@@ -12,14 +15,20 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { in: 8..32 }
   validates :sex, presence: true
   validates :birthday, presence: true
-  validates :auth_token, uniqueness: true
 
   def logged_in?
     !self.nil? && self.check_auth_token
   end
 
   def check_auth_token
-    time_create = Time.parse(self.auth_token.split("/")[1])
-    Time.now - time_create < 7200
+    return Time.now - self.session_time > 7200 ? false : true
+  end
+
+  def check_followed followed_user_id
+    self.followers.where("followed_user_id = #{followed_user_id}").blank? ? false : true
+  end
+
+  def check_favorited article_id
+    return self.favorites.where("article_id = #{article_id}").blank? ? false : true
   end
 end
