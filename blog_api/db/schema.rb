@@ -10,12 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170515094605) do
+ActiveRecord::Schema.define(version: 20170517032117) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
-  create_table "articles", force: :cascade do |t|
+  create_table "articles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
     t.string   "description"
     t.string   "detail"
@@ -31,18 +28,18 @@ ActiveRecord::Schema.define(version: 20170515094605) do
     t.index ["user_id"], name: "index_articles_on_user_id", using: :btree
   end
 
-  create_table "articles_tags", force: :cascade do |t|
+  create_table "articles_tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "article_id"
     t.integer "tag_id"
     t.index ["article_id"], name: "index_articles_tags_on_article_id", using: :btree
     t.index ["tag_id"], name: "index_articles_tags_on_tag_id", using: :btree
   end
 
-  create_table "categories", force: :cascade do |t|
+  create_table "categories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
   end
 
-  create_table "comments", force: :cascade do |t|
+  create_table "comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "user_id"
     t.integer  "article_id"
     t.string   "content"
@@ -52,23 +49,23 @@ ActiveRecord::Schema.define(version: 20170515094605) do
     t.index ["user_id"], name: "index_comments_on_user_id", using: :btree
   end
 
-  create_table "favorites", force: :cascade do |t|
+  create_table "favorites", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "article_id"
     t.integer "user_id"
     t.index ["article_id"], name: "index_favorites_on_article_id", using: :btree
     t.index ["user_id"], name: "index_favorites_on_user_id", using: :btree
   end
 
-  create_table "follows", force: :cascade do |t|
+  create_table "follows", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "follower_user_id"
     t.integer "followed_user_id"
   end
 
-  create_table "tags", force: :cascade do |t|
+  create_table "tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "email"
     t.string   "first_name"
     t.string   "last_name"
@@ -77,9 +74,10 @@ ActiveRecord::Schema.define(version: 20170515094605) do
     t.date     "birthday"
     t.integer  "sex"
     t.integer  "role"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.string   "auth_token"
+    t.datetime "session_time"
   end
 
   add_foreign_key "articles", "categories"
