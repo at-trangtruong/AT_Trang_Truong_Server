@@ -1,5 +1,5 @@
 class Article::ShowSerializer < ActiveModel::Serializer
-  attributes :id, :name, :description, :detail, :picture, :favorites_count, :favorited, :followed, :created_at, :updated_at
+  attributes :id, :name, :detail, :picture, :favorites_count, :favorited, :followed, :created_at, :updated_at
 
   belongs_to :user, serializer: User::UserArticlesSerializer
   has_many :tags
