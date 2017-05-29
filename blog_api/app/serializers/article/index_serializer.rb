@@ -7,4 +7,8 @@ class Article::IndexSerializer < ActiveModel::Serializer
   def favorites_count
     object.favorites.size
   end
+
+  def description
+  	object.detail.slice(0..250)
+  end
 end

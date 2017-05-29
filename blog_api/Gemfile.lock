@@ -99,7 +99,6 @@ GEM
     nokogiri (1.7.1)
       mini_portile2 (~> 2.1.0)
     oj (3.0.6)
-    pg (0.20.0)
     pry (0.10.4)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -193,7 +192,6 @@ DEPENDENCIES
   mysql2
   oj
   paranoia!
-  pg (~> 0.18)
   pry
   puma (~> 3.0)
   rabl

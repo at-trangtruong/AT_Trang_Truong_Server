@@ -16,8 +16,9 @@ module Api::V1
       @article = Article.new article_params
       @article.user_id = current_user.id
       if @article.save
-        tags = params[:article][:tag].split(",")
+        tags = params[:tag].split(",")
         Tag.add_tags tags, @article.id
+        render json: @article, status: 200
       else
         render json: {errors: @article.errors}, status: 422
       end
@@ -25,7 +26,7 @@ module Api::V1
 
     def update
       if @article.update article_params
-        tags = params[:article][:tag].split(",")
+        tags = [:tag].split(",")
         Tag.add_tags tags, @article.id
       else
         render json: {errors: @article.errors}, status: 422
@@ -38,7 +39,7 @@ module Api::V1
     end
 
     def article_params
-      params.require("article").permit :name, :description, :detail, :category_id, :picture
+      params.permit :name, :detail, :category_id, :picture
     end
   end
 end
