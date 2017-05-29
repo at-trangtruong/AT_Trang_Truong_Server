@@ -14,7 +14,6 @@ gem 'puma', '~> 3.0'
 # Also add either `oj` or `yajl-ruby` as the JSON parser
 gem 'pry'
 # Gemfile
-gem 'rabl'
 # Also add either `oj` or `yajl-ruby` as the JSON parser
 gem 'oj'
 gem 'jwt'

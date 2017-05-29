@@ -104,8 +104,6 @@ GEM
       method_source (~> 0.8.1)
       slop (~> 3.4)
     puma (3.8.2)
-    rabl (0.13.1)
-      activesupport (>= 2.3.14)
     rack (2.0.1)
     rack-cors (0.4.1)
     rack-test (0.6.3)
@@ -194,7 +192,6 @@ DEPENDENCIES
   paranoia!
   pry
   puma (~> 3.0)
-  rabl
   rack-cors
   rails (~> 5.0.2)
   rspec-rails
