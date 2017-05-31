@@ -1,5 +1,5 @@
 class Api::V1::CommentsController < ApplicationController
-
+  before_action :get_comment, only: [:update, :destroy]
   def index
     @comments = (Comment.where article_id: params[:article_id]).includes(:user)
     render json: @comments, each_serializer: Comment::ArticleCommentSerializer
@@ -15,7 +15,6 @@ class Api::V1::CommentsController < ApplicationController
   end
 
   def update
-    @comment = Comment.find params[:id]
     if @comment.update content: params[:comment][:content]
       render json: {messages: "succsess"}, status: 200
     else
@@ -24,11 +23,15 @@ class Api::V1::CommentsController < ApplicationController
   end
 
   def destroy
-    @comment = Comment.find params[:id]
     if @comment.destroy
       render json: {messages: "succsess"}, status: 200
     else
       render json: {errors: @comment.errors} , status: 401
     end
+  end
+
+  private
+  def get_comment
+    @comment = Comment.find params[:id]
   end
 end

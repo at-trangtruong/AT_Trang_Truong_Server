@@ -2,6 +2,7 @@ class Article::ShowSerializer < ActiveModel::Serializer
   attributes :id, :name, :detail, :picture, :favorites_count, :favorited, :followed, :created_at, :updated_at
 
   belongs_to :user, serializer: User::UserArticlesSerializer
+  belongs_to :category
   has_many :tags
   has_many :comments, serializer:  Comment::ArticleCommentSerializer
 

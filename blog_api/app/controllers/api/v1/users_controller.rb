@@ -1,5 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   before_action :get_user, only: [:update, :show]
+
   def create
     @user = User.new user_params
     if @user.save
@@ -10,7 +11,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def update
-    if @user.update user_params
+    if check_password && (@user.update user_params)
       render json: @user, serializer: User::LoginSerializer, status: 200
     else
       render json: {errors: @user.errors}, status: 422
@@ -23,10 +24,14 @@ class Api::V1::UsersController < ApplicationController
 
   private
   def user_params
-    params.require("user").permit :email, :password, :first_name, :last_name, :birthday, :sex, :avatar
+    params.permit :email, :password, :first_name, :last_name, :birthday, :sex, :avatar
   end
 
   def get_user
     @user = User.find params[:id]
+  end
+
+  def check_password
+    params[:old_password] != @user.password ? false : true
   end
 end
