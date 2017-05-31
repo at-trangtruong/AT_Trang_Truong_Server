@@ -16,9 +16,9 @@ class Api::V1::Articles::ArticlesController < ApplicationController
     @article = Article.new article_params
     @article.user_id = current_user.id
     if @article.save
-      tags = params[:article][:tag].split(",")
+      tags = params[:tag].split(",")
       Tag.add_tags tags, @article.id
-      render json: {messages: "add succsess"}
+      render json: @article, status: 200
     else
       render json: {errors: @article.errors}, status: 422
     end
@@ -26,7 +26,7 @@ class Api::V1::Articles::ArticlesController < ApplicationController
 
   def update
     if @article.update article_params
-      tags = params[:article][:tag].split(",")
+      tags = params[:tag].split(",")
       Tag.add_tags tags, @article.id
       render json: {messages: "edit succsess"}
     else
@@ -40,7 +40,7 @@ class Api::V1::Articles::ArticlesController < ApplicationController
   end
 
   def article_params
-    params.require("article").permit :name, :detail, :category_id, :picture
+    params.permit :name, :detail, :category_id, :picture
   end
 
 end

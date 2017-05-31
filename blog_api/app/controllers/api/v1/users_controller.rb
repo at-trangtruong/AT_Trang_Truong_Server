@@ -11,6 +11,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def update
+    binding.pry
     if @user.update user_params
       render json: @user, serializer: User::LoginSerializer, status: 200
     else
@@ -24,7 +25,7 @@ class Api::V1::UsersController < ApplicationController
 
   private
   def user_params
-    params.require("user").permit :email, :password, :first_name, :last_name, :birthday, :sex, :avatar
+    params.permit :email, :password, :first_name, :last_name, :birthday, :sex, :avatar
   end
 
   def get_user
