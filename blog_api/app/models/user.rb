@@ -16,12 +16,8 @@ class User < ApplicationRecord
   validates :sex, presence: true
   validates :birthday, presence: true
 
-  def logged_in?
-    !self.nil? && self.check_auth_token
-  end
-
   def check_auth_token
-    return Time.now - self.session_time > 7200 ? false : true
+    Time.now - self.session_time > 7200 ? false : true
   end
 
   def check_followed followed_user_id
@@ -29,6 +25,10 @@ class User < ApplicationRecord
   end
 
   def check_favorited article_id
-    return self.favorites.where("article_id = #{article_id}").blank? ? false : true
+    self.favorites.where("article_id = #{article_id}").blank? ? false : true
+  end
+
+  def picture
+    self.avatar.url
   end
 end
