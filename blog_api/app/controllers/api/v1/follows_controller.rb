@@ -1,4 +1,5 @@
 class Api::V1::FollowsController < ApplicationController
+  before_action :check_login
 
   def create
     follow = Follow.new followed_user_id: params[:user_id], follower_user_id: current_user.id
@@ -15,6 +16,6 @@ class Api::V1::FollowsController < ApplicationController
       render json: {is_followed: false}, status: 200
     else
       render json: {errors: follow.errors.messages} , status: 401
-    end 
+    end
   end
 end

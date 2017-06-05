@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       resources :categories, only: [:index] do
         get "articles", on: :member, to: "categories#show"
       end
+      resources :searches, only: [:index]
     end
   end
 end

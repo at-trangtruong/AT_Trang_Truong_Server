@@ -8,17 +8,17 @@ class Api::V1::CommentsController < ApplicationController
   def create
     @comment = Comment.new content: params[comment][:content], user_id: current_user.id, article_id: params[:article_id]
     if @comment.save
-      render json: {messages: "succsess"}, status: 200
+      render json: comment, serializer: Comment::ArticleCommentSerializer, status: 200
     else
-      render json: {errors: @comment.errors} , status: 401
+      render json: {messages: @comment.errors} , status: 401
     end
   end
 
   def update
     if @comment.update content: params[:comment][:content]
-      render json: {messages: "succsess"}, status: 200
+      render json: comment, serializer: Comment::ArticleCommentSerializer, status: 200
     else
-      render json: {errors: @comment.errors} , status: 401
+      render json: {messages: @comment.errors} , status: 401
     end
   end
 
@@ -26,7 +26,7 @@ class Api::V1::CommentsController < ApplicationController
     if @comment.destroy
       render json: {messages: "succsess"}, status: 200
     else
-      render json: {errors: @comment.errors} , status: 401
+      render json: {messages: @comment.errors} , status: 401
     end
   end
 
