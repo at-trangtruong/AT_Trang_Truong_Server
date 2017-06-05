@@ -11,8 +11,9 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def update
-    binding.pry
-    if @user.update user_params
+    if !check_password
+      render json: {errors: "old password is incorrect"}, status: 422
+    elsif @user.update user_params
       render json: @user, serializer: User::LoginSerializer, status: 200
     else
       render json: {errors: @user.errors}, status: 422
@@ -30,5 +31,9 @@ class Api::V1::UsersController < ApplicationController
 
   def get_user
     @user = User.find params[:id]
+  end
+
+  def check_password
+    params[:old_password] != @user.password ? false : true
   end
 end

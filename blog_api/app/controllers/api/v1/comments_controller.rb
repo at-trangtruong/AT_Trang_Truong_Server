@@ -1,34 +1,38 @@
 class Api::V1::CommentsController < ApplicationController
+  before_action :get_comment, only: [:update, :destroy]
 
-  def index
+ def index
     @comments = (Comment.where article_id: params[:article_id]).includes(:user)
     render json: @comments, each_serializer: Comment::ArticleCommentSerializer
   end
 
-  def create
-    @comment = Comment.new content: params[comment][:content], user_id: current_user.id, article_id: params[:article_id]
-    if @comment.save
-      render json: {messages: "succsess"}, status: 200
+ def create
+    comment = Comment.new content: params[:comment][:content], user_id: current_user.id, article_id: params[:article_id]
+    if comment.save
+      render json: comment, serializer: Comment::ArticleCommentSerializer, status: 200
     else
-      render json: {errors: @comment.errors} , status: 401
+      render json: {errors: comment.errors} , status: 401
     end
   end
 
-  def update
-    @comment = Comment.find params[:id]
+ def update
     if @comment.update content: params[:comment][:content]
-      render json: {messages: "succsess"}, status: 200
+      render json: @comment, serializer: Comment::ArticleCommentSerializer, status: 200
     else
       render json: {errors: @comment.errors} , status: 401
     end
   end
 
-  def destroy
-    @comment = Comment.find params[:id]
+ def destroy
     if @comment.destroy
-      render json: {messages: "succsess"}, status: 200
+      render json: {}, status: 200
     else
       render json: {errors: @comment.errors} , status: 401
     end
+  end
+
+ private
+  def get_comment
+    @comment = Comment.find params[:id]
   end
 end
