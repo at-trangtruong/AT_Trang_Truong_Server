@@ -1,6 +1,7 @@
 class Api::V1::CommentsController < ApplicationController
   before_action :get_comment, only: [:update, :destroy]
-  before_action :check_login, only: [:update, :create, :destroy]
+  before_action :check_login, except: :index
+
  def index
     @comments = (Comment.where article_id: params[:article_id]).order(created_at: :desc).includes(:user)
     render json: @comments, each_serializer: Comment::ArticleCommentSerializer

@@ -5,13 +5,12 @@ Rails.application.routes.draw do
       get 'home', to: 'articles#index'
       resources :articles, :controller => "articles/articles"  do
         resources :comments, only: [:index,  :create, :update, :destroy]
-        post "favorites", on: :member, to: "articles/favorites#create"
         delete "favorites", on: :member, to: "articles/favorites#destroy"
+        post "favorites", on: :member, to: "articles/favorites#create"
       end
       resources :users do
-        resources :articles, only: [:index], controller: "articles/user_articles"
-        post "follows", on: :member, to: "follows#create"
         delete "follows", on: :member, to: "follows#destroy"
+        post "follows", on: :member, to: "follows#create"
         collection do
           post "login" => "sessions#create"
           post "signup" => "users#create"

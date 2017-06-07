@@ -2,8 +2,8 @@ class Api::V1::Articles::FavoritesController < ApplicationController
   before_action :check_login, except: :index
 
   def index
-    articles = Article.joins(:favorites).group(:article_id).select("articles.*, count(favorites.id) as order_item").order("order_item desc").limit(5).includes(:category, :user)
-  render json: articles, status: 200, each_serializer: Article::PopularSerializer
+    articles = Article.joins(:favorites).group(:article_id).select("articles.*, count(favorites.id) as order_item").order("order_item desc").limit(3).includes(:category, :user)
+    render json: articles, status: 200
   end
 
   def create

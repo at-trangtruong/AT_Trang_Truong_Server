@@ -1,7 +1,7 @@
 class Api::V1::Articles::ArticlesController < ApplicationController
   before_action :get_article, only: [:show, :update, :destroy]
   before_action :check_login, only: [:update, :create, :destroy]
-  
+
   def index
     current_page = params[:page].blank? ? 1 : params[:page]
     @articles = Article.all.limit(5).offset(5*(current_page.to_i - 1)).includes(:user, :category)
@@ -19,6 +19,7 @@ class Api::V1::Articles::ArticlesController < ApplicationController
     @article.user_id = current_user.id
     if @article.save
       @article.add_tags params[:tag] unless params[:tag].blank?
+      create_search
       render json: @article, status: 200
     else
       render json: {messages: @article.errors}, status: 422
@@ -30,6 +31,7 @@ class Api::V1::Articles::ArticlesController < ApplicationController
       render json: {messages: "This article is not your"}, status: 401
     elsif @article.update article_params
       @article.add_tags params[:tag] unless params[:tag].blank?
+      @article.search.update name: @article.name, category: @article.category.name
       render json: @article, status: 200
     else
       render json: {messages: @article.errors}, status: 422
@@ -45,7 +47,7 @@ class Api::V1::Articles::ArticlesController < ApplicationController
       render json: {messages: @article.errors} , status: 401
     end
   end
- 
+
 
   def destroy
     if @article.destroy
