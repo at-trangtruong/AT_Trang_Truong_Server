@@ -10,18 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170517032117) do
+ActiveRecord::Schema.define(version: 20170605075850) do
 
   create_table "articles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
-    t.string   "description"
-    t.string   "detail"
+    t.text     "detail",      limit: 65535
     t.string   "picture"
     t.integer  "status"
     t.integer  "category_id"
     t.integer  "user_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
     t.datetime "deleted_at"
     t.index ["category_id"], name: "index_articles_on_category_id", using: :btree
     t.index ["deleted_at"], name: "index_articles_on_deleted_at", using: :btree
@@ -61,6 +60,17 @@ ActiveRecord::Schema.define(version: 20170517032117) do
     t.integer "followed_user_id"
   end
 
+  create_table "searches", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "fullname"
+    t.string   "tag"
+    t.string   "category"
+    t.string   "name"
+    t.integer  "article_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["article_id"], name: "index_searches_on_article_id", using: :btree
+  end
+
   create_table "tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
   end
@@ -88,4 +98,5 @@ ActiveRecord::Schema.define(version: 20170517032117) do
   add_foreign_key "comments", "users"
   add_foreign_key "favorites", "articles"
   add_foreign_key "favorites", "users"
+  add_foreign_key "searches", "articles"
 end

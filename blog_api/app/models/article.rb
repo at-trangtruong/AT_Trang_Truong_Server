@@ -1,4 +1,5 @@
 class Article < ApplicationRecord
+
   acts_as_paranoid
 
   mount_uploader :picture, PictureUploader
@@ -6,15 +7,22 @@ class Article < ApplicationRecord
   has_many :articles_tags
   has_many :favorites
   has_many :comments
+  has_one :search
   belongs_to :category
   belongs_to :user
   has_many :tags, through: :articles_tags
 
-  validates :name, :presence => {:message => "Vui lòng nhập tên bài viết!!!" }
-  validates :description, :presence => {:message => "Vui lòng nhập mô tả bài viết!!!" }
-  validates :detail, :presence => {:message => "Vui lòng nhập chi tiết bài viết!!!" }
-  validates :category_id, :presence => {:message => "Vui lòng chọn danh mục bài viết!!!" }
+  validates :name, presence: true
+  validates :detail, presence: true
+  validates :category_id, presence: true
 
-  scope :with_count_favorites, -> {joins(:favorites).select("articles.* ,Count(favorites.id) AS favorite_count").group("articles.id")}
+  def add_tags tags
+    Tag.add_tags tags.split(","), self.id
+    self.create_search fullname: (self.user.first_name + " " + self.user.last_name), tag: self.get_tags, category: self.category.name, name: self.name
+  end
+
+  def get_tags
+    self.tags.map{|tag| tag.name}.join(", ")
+  end
 
 end

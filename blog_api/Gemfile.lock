@@ -99,14 +99,11 @@ GEM
     nokogiri (1.7.1)
       mini_portile2 (~> 2.1.0)
     oj (3.0.6)
-    pg (0.20.0)
     pry (0.10.4)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
     puma (3.8.2)
-    rabl (0.13.1)
-      activesupport (>= 2.3.14)
     rack (2.0.1)
     rack-cors (0.4.1)
     rack-test (0.6.3)
@@ -193,10 +190,8 @@ DEPENDENCIES
   mysql2
   oj
   paranoia!
-  pg (~> 0.18)
   pry
   puma (~> 3.0)
-  rabl
   rack-cors
   rails (~> 5.0.2)
   rspec-rails

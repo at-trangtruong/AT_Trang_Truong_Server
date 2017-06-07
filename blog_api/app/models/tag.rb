@@ -6,14 +6,12 @@ class Tag < ApplicationRecord
 
   def self.add_tags tags, article_id
     tags.each do |t|
-      tag = self.new name: t
-      if tag.save
+      tag = self.find_by name: t
+      if tag.nil?
+        tag = Tag.create name: t
         tag.articles_tags.create article_id: article_id
       else
-        tag = self.find_by name: t
-        if !tag.nil? &&  (tag.articles_tags.find_by article_id: article_id).nil?
-          tag.articles_tags.create article_id: article_id
-        end
+        tag.articles_tags.create article_id: article_id if (tag.articles_tags.find_by article_id: article_id).nil?
       end
     end
   end
