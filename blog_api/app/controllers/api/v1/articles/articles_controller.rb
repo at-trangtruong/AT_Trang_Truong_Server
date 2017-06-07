@@ -1,6 +1,7 @@
 class Api::V1::Articles::ArticlesController < ApplicationController
   before_action :get_article, only: [:show, :update, :destroy]
-
+  before_action :check_login, only: [:update, :create, :destroy]
+  
   def index
     current_page = params[:page].blank? ? 1 : params[:page]
     @articles = Article.all.limit(5).offset(5*(current_page.to_i - 1)).includes(:user, :category)
@@ -17,20 +18,31 @@ class Api::V1::Articles::ArticlesController < ApplicationController
     @article = Article.new article_params
     @article.user_id = current_user.id
     if @article.save
-      add_tags
-      render json: {messages: "add succsess"}
+      @article.add_tags params[:tag] unless params[:tag].blank?
+      render json: @article, status: 200
     else
-      render json: {errors: @article.errors}, status: 422
+      render json: {messages: @article.errors}, status: 422
     end
   end
 
   def update
-    check_user_id
-    if @article.update article_params
-      add_tags
-      render json: {messages: "edit succsess"}
+    if !check_user_article
+      render json: {messages: "This article is not your"}, status: 401
+    elsif @article.update article_params
+      @article.add_tags params[:tag] unless params[:tag].blank?
+      render json: @article, status: 200
     else
-      render json: {errors: @article.errors}, status: 422
+      render json: {messages: @article.errors}, status: 422
+    end
+  end
+
+  def destroy
+    if !check_user_article
+      render json: {messages: "This article is not your"}, status: 401
+    elsif @article.destroy
+      render json: {messages: "delete succsessly"}, status: 200
+    else
+      render json: {messages: @article.errors} , status: 401
     end
   end
  
@@ -52,12 +64,7 @@ class Api::V1::Articles::ArticlesController < ApplicationController
     params.permit :name, :detail, :category_id, :picture
   end
 
-  def add_tags
-    tags = params[:tag].split(",")
-    Tag.add_tags tags, @article.id
-  end
-
-  def check_user_id
-    render json: {errors: "not found user_id"}, status: 422 if current_user.id != @article.user_id
+  def check_user_article
+    current_user.id != @article.user_id ? false : true
   end
 end

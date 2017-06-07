@@ -5,12 +5,12 @@ Rails.application.routes.draw do
       get 'home', to: 'articles#index'
       resources :articles, :controller => "articles/articles"  do
         resources :comments, only: [:index,  :create, :update, :destroy]
-        resources :favorites, only: [:create], :controller => "articles/favorites"
+        post "favorites", on: :member, to: "articles/favorites#create"
         delete "favorites", on: :member, to: "articles/favorites#destroy"
       end
       resources :users do
         resources :articles, only: [:index], controller: "articles/user_articles"
-        resources :follows, only: [:create]
+        post "follows", on: :member, to: "follows#create"
         delete "follows", on: :member, to: "follows#destroy"
         collection do
           post "login" => "sessions#create"
@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       resources :categories, only: [:index] do
         get "articles", on: :member, to: "categories#show"
       end
+      resources :searches, only: [:index]
     end
   end
 end
