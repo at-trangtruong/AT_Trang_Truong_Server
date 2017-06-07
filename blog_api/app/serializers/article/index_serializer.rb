@@ -9,7 +9,7 @@ class Article::IndexSerializer < ActiveModel::Serializer
   end
 
   def description
-    object.detail.slice(0..100)
+  	object.detail.slice(0..250)
   end
 
   def favorited

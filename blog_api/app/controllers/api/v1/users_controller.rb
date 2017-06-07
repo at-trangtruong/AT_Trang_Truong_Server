@@ -23,7 +23,8 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def show
-    render json: @user, serializer: User::ShowSerializer, status: 200
+    followed = current_user.nil? ? false : (current_user.check_followed params[:id])
+    render json: @user, serializer: User::ShowSerializer, followed: followed, status: 200
   end
 
   private

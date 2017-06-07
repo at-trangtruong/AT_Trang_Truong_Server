@@ -39,11 +39,21 @@ class Api::V1::Articles::ArticlesController < ApplicationController
   end
 
   def destroy
-    check_user_article
-    if @article.destroy
+    if !check_user_article
+      render json: {messages: "This article is not your"}, status: 401
+    elsif @article.destroy
       render json: {messages: "delete succsessly"}, status: 200
     else
       render json: {messages: @article.errors} , status: 401
+    end
+  end
+
+
+  def destroy
+    if @article.destroy
+      render json: {messages: "delete succsessly"}, status: 200
+    else
+      render json: {errors: @article.errors} , status: 401
     end
   end
 

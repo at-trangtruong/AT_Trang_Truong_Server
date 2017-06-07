@@ -2,13 +2,13 @@ class Api::V1::CommentsController < ApplicationController
   before_action :get_comment, only: [:update, :destroy]
   before_action :check_login, except: :index
 
-  def index
-    @comments = (Comment.where article_id: params[:article_id]).includes(:user)
+ def index
+    @comments = (Comment.where article_id: params[:article_id]).order(created_at: :desc).includes(:user)
     render json: @comments, each_serializer: Comment::ArticleCommentSerializer
   end
 
   def create
-    @comment = Comment.new content: params[comment][:content], user_id: current_user.id, article_id: params[:article_id]
+    @comment = Comment.new content: params[:comment][:content], user_id: current_user.id, article_id: params[:article_id]
     if @comment.save
       render json: @comment, serializer: Comment::ArticleCommentSerializer, status: 200
     else
@@ -16,7 +16,7 @@ class Api::V1::CommentsController < ApplicationController
     end
   end
 
-  def update
+ def update
     if @comment.update content: params[:comment][:content]
       render json: @comment, serializer: Comment::ArticleCommentSerializer, status: 200
     else
@@ -24,15 +24,15 @@ class Api::V1::CommentsController < ApplicationController
     end
   end
 
-  def destroy
+ def destroy
     if @comment.destroy
-      render json: {messages: "succsess"}, status: 200
+      render json: {}, status: 200
     else
       render json: {messages: @comment.errors} , status: 401
     end
   end
 
-  private
+ private
   def get_comment
     @comment = Comment.find params[:id]
   end

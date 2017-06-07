@@ -3,7 +3,7 @@ class Article::ShowSerializer < ActiveModel::Serializer
 
   belongs_to :user, serializer: User::UserArticlesSerializer
   belongs_to :category
-  has_many :tags
+  has_many :tags, serializer: Tag::ArticleTagsSerializer
   has_many :comments, serializer:  Comment::ArticleCommentSerializer
 
   def favorites_count
