@@ -6,7 +6,7 @@ class Api::V1::SessionsController < ApplicationController
       user.update_attributes auth_token: SecureRandom.hex, session_time: Time.now
       render json: user, serializer: User::LoginSerializer, status: 200
     else
-      render json: {errors: user.errors}, status: 401
+      render json: {errors: "login failed"}, status: 401
     end
   end
 

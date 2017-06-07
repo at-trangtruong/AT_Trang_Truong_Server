@@ -7,12 +7,13 @@ class User < ApplicationRecord
   has_many :favorites
   has_many :followers, class_name: Follow.name, foreign_key: :follower_user_id
   has_many :followeds, class_name: Follow.name, foreign_key: :followed_user_id
+  has_many :searches, through: :articles
 
   validates :email, presence: true, uniqueness: true
-  validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :on => :create
+  validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, on: :create
   validates :first_name, presence: true, length: { in: 0..10 }
   validates :last_name, presence: true, length: { in: 0..20 }
-  validates :password, presence: true, length: { in: 8..32 }
+  validates :password, presence: true, length: { in: 8..32 }, on: :create
   validates :sex, presence: true
   validates :birthday, presence: true
 
@@ -30,5 +31,11 @@ class User < ApplicationRecord
 
   def picture
     self.avatar.url
+  end
+
+  def update_searches
+    self.searches.each do |search|
+      search.update fullname: (self.first_name + " " + self.last_name)
+    end
   end
 end

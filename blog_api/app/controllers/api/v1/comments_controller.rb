@@ -1,5 +1,7 @@
 class Api::V1::CommentsController < ApplicationController
   before_action :get_comment, only: [:update, :destroy]
+  before_action :check_login, except: :index
+
   def index
     @comments = (Comment.where article_id: params[:article_id]).includes(:user)
     render json: @comments, each_serializer: Comment::ArticleCommentSerializer
@@ -8,7 +10,7 @@ class Api::V1::CommentsController < ApplicationController
   def create
     @comment = Comment.new content: params[comment][:content], user_id: current_user.id, article_id: params[:article_id]
     if @comment.save
-      render json: comment, serializer: Comment::ArticleCommentSerializer, status: 200
+      render json: @comment, serializer: Comment::ArticleCommentSerializer, status: 200
     else
       render json: {messages: @comment.errors} , status: 401
     end
@@ -16,7 +18,7 @@ class Api::V1::CommentsController < ApplicationController
 
   def update
     if @comment.update content: params[:comment][:content]
-      render json: comment, serializer: Comment::ArticleCommentSerializer, status: 200
+      render json: @comment, serializer: Comment::ArticleCommentSerializer, status: 200
     else
       render json: {messages: @comment.errors} , status: 401
     end

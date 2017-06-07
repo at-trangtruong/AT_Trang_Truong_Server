@@ -1,39 +1,42 @@
- require 'spec_helper'
- RSpec.describe Api::V1::UsersController, type: :controller do
+require 'rails_helper'
 
- describe "POST #create" do
+describe Api::V1::UsersController do
 
-    context "when is successfully created" do
-      before(:each) do
-        @user_attributes = FactoryGirl.attributes_for :user
-        post :create, { user: @user_attributes }
-      end
 
-      it "renders the json representation for the user record just created" do
-        user_response = json_response[:user]
-        expect(user_response[:email]).to eql @user_attributes[:email]
-      end
-
-      it { should respond_with 201 }
+  describe "GET /api/v1/users/:id" do
+    let!(:user) { FactoryGirl.create :user }
+    it "Status 200" do
+      get :show, params: user.slice("id")
+      expect(response).to be_success
     end
 
-    context "when is not created" do
-      before(:each) do
-        @invalid_user_attributes = { password: "12345678", password_confirmation: "12345678" } #notice I'm not including the email
-        post :create, { user: @invalid_user_attributes }
-      end
+    it "information user" do
+      user.id = 10
+      get :show, params: user.slice("id")
+      response_json= JSON.parse(response.body)
+      expect(response_json["messages"]).to eql "Not found"
+    end
+  end
 
-      it "renders an errors json" do
-        user_response = json_response
-        expect(user_response).to have_key(:errors)
+  describe "POST /api/v1/users" do
+    describe "when create new user is successfully" do
+      let!(:user) { FactoryGirl.attributes_for :user }
+      it "Status 200" do
+        post :create, params: user
+        expect(response).to be_success
       end
+    end
+  end
 
-      it "renders the json errors on whye the user could not be created" do
-        user_response = json_response
-        expect(user_response[:errors][:email]).to include "can't be blank"
+  describe "PUT /api/v1/users/:id" do
+    describe "check login failer" do
+      let!(:user_params) { FactoryGirl.attributes_for :user }
+      let!(:user) { FactoryGirl.create :user }
+      it "Status 403" do
+        binding.pry
+        put :update, params: user.slice("id")
+        expect(response).to have_http_status(403)
       end
-
-      it { should respond_with 422 }
     end
   end
 end

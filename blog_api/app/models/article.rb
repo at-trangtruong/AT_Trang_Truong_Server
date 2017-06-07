@@ -7,7 +7,7 @@ class Article < ApplicationRecord
   has_many :articles_tags
   has_many :favorites
   has_many :comments
-  has_one :search
+  has_one :search, dependent: :destroy
   belongs_to :category
   belongs_to :user
   has_many :tags, through: :articles_tags
@@ -18,10 +18,11 @@ class Article < ApplicationRecord
 
   def add_tags tags
     Tag.add_tags tags.split(","), self.id
-    binding.pry
-    self.create_search fullname: (self.user.first_name + " " + self.user.last_name), tag: self.get_tags, category: self.category.name, name: self.name
   end
 
+  def create_search
+    self.create_search fullname: (self.user.first_name + " " + self.user.last_name), tag: self.get_tags, category: self.category.name, name: self.name
+  end
   def get_tags
     self.tags.map{|tag| tag.name}.join(", ")
   end
